@@ -1,0 +1,8 @@
+\contentsline {figure}{\numberline {1}{\ignorespaces Step 1: The matrix at the beginning of the computation. Each process computes its minimum reweighted value. The processors exchange and a global minimum value (Min) is found.}}{2}{figure.1}
+\contentsline {figure}{\numberline {2}{\ignorespaces Step 2: The row and column corresponding to i are eliminated from future work. The new node U is added and distances to it and every other node are computed. Each processor computes its corresponding piece and then the pieces are sent to the processor which owns column J; This is effectively a row-column transpose operation.}}{3}{figure.2}
+\contentsline {figure}{\numberline {3}{\ignorespaces Performance of both serial implementation both with respect to total time as well as the ratio of time spent in MPI to the total time.}}{5}{figure.3}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Total run time for each matrix size and processor combination}}}{5}{figure.3}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Time spent in MPI routines divided by Total run time.}}}{5}{figure.3}
+\contentsline {figure}{\numberline {4}{\ignorespaces Speedup and Efficiency plots}}{6}{figure.4}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Speedup}}}{6}{figure.4}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Parallel efficiciency}}}{6}{figure.4}

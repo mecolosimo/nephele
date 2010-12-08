@@ -1,0 +1,6 @@
+
+thales:~/classes/spring-2007/CS-267/final/src bullard$ aclocal -I m4
+thales:~/classes/spring-2007/CS-267/final/src bullard$ autoconf
+thales:~/classes/spring-2007/CS-267/final/src bullard$ autoheader
+thales:~/classes/spring-2007/CS-267/final/src bullard$ automake
+thales:~/classes/spring-2007/CS-267/final/src bullard$ ./configure

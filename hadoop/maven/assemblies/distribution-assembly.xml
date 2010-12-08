@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: distribution-assembly.xml 1148 2009-05-06 19:38:06Z mcolosimo $ -->
+<!--
+Makes a directory containing everything and then zips it up if goal is single
+Part of maven-assembly-plugin; assembly:directory-inline
+-->
+
+<assembly>
+    <!-- what gets tagged onto ${artifactId}-${version} ending with ".dir" or ".zip" -->
+    <id>distribution</id>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <fileSets>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <!-- copy ourself over -->
+                <include>${artifactId}-${version}.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    
+    <!-- copy our dependencies over to the lib directory -->
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <unpack>false</unpack>
+            <scope>runtime</scope>
+            <!-- we get copied here as well -->
+        </dependencySet>
+    </dependencySets>
+</assembly>
+

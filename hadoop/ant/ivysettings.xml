@@ -1,0 +1,53 @@
+<!-- Standard Ivy settings -->
+<ivysettings>
+
+	<!-- Properties that may be useful in the properties file below: -->
+  <property name="art-rev.ext" value="[artifact]-[revision].[ext]" />
+  <property name="org/mod/art-rev.ext"
+						value="[organisation]/[module]/[artifact]-[revision].[ext]" />
+  <property name="org/mod/rev/art-rev.ext"
+						value="[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+  <property name="org/mod/typ/art-rev.ext"
+						value="[organisation]/[module]/[type]s/[artifact]-[revision].[ext]" />
+  <property name="org/mod/rev/typ/art.ext"
+						value="[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" />
+
+	<!-- Properties defined above may be referenced in the following properties file.
+			 Values in that file will override any set in the included files below.
+	-->
+	<properties file="${ivy.settings.dir}/ivysettings.properties" />
+
+	<!-- The <include ...>s below set up the public, shared, and local resolvers
+			 with default values.
+			 * The local repository is typically under the user's home directory.
+			 * The shared repository is typically on the local machine and available to
+			   all users.
+			 * The public repository is currently ibiblio, which uses
+			   http://repo1.maven.org/maven2/.
+			 http://ant.apache.org/ivy/history/latest-milestone/tutorial/defaultconf.html
+			 gives the contents of these files.
+	-->
+	<include url="${ivy.default.conf.dir}/ivysettings-public.xml" />
+	<include url="${ivy.default.conf.dir}/ivysettings-shared.xml" />
+	<include url="${ivy.default.conf.dir}/ivysettings-local.xml" />
+
+  <caches defaultCacheDir="${default.cache.dir}"
+					artifactPattern="${default.cache.artifact.pattern}"
+					     ivyPattern="${default.cache.ivy.pattern}"
+	>
+  </caches>
+
+  <settings defaultResolver="general-chain" />
+
+  <resolvers>
+    <chain name="general-chain" returnFirst="true">
+      <resolver ref="local" />
+      <resolver ref="shared" />
+      <resolver ref="public" />
+    </chain>
+  </resolvers>
+
+  <modules>
+  </modules>
+
+</ivysettings>
