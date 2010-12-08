@@ -1,0 +1,12 @@
+Changes:
+
+2.1.0:
+	- Lots of code clean up
+	- Added beta locality-sensitive hashing (LSH) code
+
+2.2.0:
+	- Added beta Canopy Clustering code
+
+2.2.1:
+	- Restructured directories
+	- Moved build from maven to ant and ivy

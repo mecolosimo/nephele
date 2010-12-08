@@ -1,0 +1,130 @@
+<project name="ccv" default="dist" basedir=".">
+    <description>
+        A simple ant build file for building hadoop complete composition vector. This does not do everything that the maven build does.
+    </description>
+
+  <!-- set global properties for this build -->
+  <property name="proj" value="hccv"/>
+  <property name="jardir" location="${basedir}/lib"/>
+  <property name="mavenbase" location="${basedir}/../"/>
+  <property name="src" location="${mavenbase}/src/main/java"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+  <property name="version" value="1.0.1"/> 
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <property name="buildjar" value="${dist}/${proj}-${version}-${DSTAMP}.jar"/>
+    <property name="distjar" value="${dist}/${proj}-${version}.jar"/>
+    <property name="bundlejar" value="${dist}/${proj}-${version}-${DSTAMP}-bundle.jar"/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+    <!-- assume that there is a lib folder at this level with all of our jars -->
+    <path id="hccv.classpath">
+        <!-- <pathelement location="lib/"/> -->
+        <fileset dir="${jardir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}" debug="on" debuglevel="lines,vars,source">
+       <classpath refid="hccv.classpath"/> 
+    </javac>
+        
+  </target>
+
+  <target name="dist-version" depends="bundle-dist">
+    <echo message="doing this"/>
+    <copy file="${bundlejar}" tofile="${distjar}"/>
+   </target>
+         
+
+  <target name="dist" depends="compile"
+        description="generate the distribution" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/lib"/> 
+    <copy todir="${dist}/lib">
+        <!-- <fileset dir="src_dir"/> -->
+        <path refid="hccv.classpath" />
+    </copy>
+
+    <!-- Convert project class path to string property using unix-style directory separators --> 
+    <pathconvert property="mf.classpath" pathsep=" " dirsep="/">
+        <path refid="hccv.classpath" /> 
+        <flattenmapper />
+        <!-- map absolute path to local path -->
+        <map from="" to="lib/"/>
+    </pathconvert>
+
+    <jar jarfile="${buildjar}">
+         <zipfileset src="${jardir}/ccv-2.1.0.jar" includes="**/*.class" />
+         <!--<zipfileset src="${jardir}/json-2.0.0.jar" includes="**/*.class" /> -->
+         <zipfileset src="${jardir}/jackson-core-asl-1.2.0.jar" includes="**/*.class" />
+         <zipfileset src="${jardir}/phylogeny-core-1.3.1.jar" includes="**/*.class" />
+         <manifest>
+            <attribute name="Class-Path" value="${mf.classpath}"/>
+            <attribute name="Main-Class" 
+                    value="org.mitre.bio.BioDriver"/>
+            <attribute name="Version" value="${version}"/>
+        </manifest>
+    </jar>
+  </target>
+
+  <target name="bundle-dist" depends="dist" description="bundles a bunch of jars together so that it works on hadoop">
+    
+        <!-- Convert project class path to string property --> 
+        <pathconvert property="mf.classpath" dirsep="/" pathsep=" ">
+            <path refid="hccv.classpath" /> 
+            <flattenmapper />
+            <!-- map absolute path to local path -->
+            <map from="" to="lib/"/>
+        </pathconvert>
+    
+        <jar jarfile="${bundlejar}" basedir="${build}">
+            <zipfileset src="${buildjar}" includes="**/*"/>
+            <zipfileset src="${jardir}/ccv-2.1.0.jar" includes="**/*.class" />
+            <!--<zipfileset src="${jardir}/json-2.0.0.jar" includes="**/*.class" /> -->
+            <zipfileset src="${jardir}/jackson-core-asl-1.2.0.jar" includes="**/*.class" />
+            <zipfileset src="${jardir}/phylogeny-core-1.3.1.jar" includes="**/*.class" />            
+            <zipfileset src="${jardir}/weka-3.5.7.jar" includes="**/*.class" />
+            <manifest>
+                <attribute name="Class-Path" value="${mf.classpath}"/>
+                <attribute name="Main-Class" 
+                        value="org.mitre.bio.BioDriver"/>
+                <attribute name="Version" value="${version}"/>
+            </manifest>
+        </jar>
+    </target>
+    
+  <target name="clean" depends="init"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+  
+  <target name="gen-doc" description="generate java doc">
+    <javadoc packagenames="org.mitre.*"
+           sourcepath="${src}"
+           defaultexcludes="yes"
+           destdir="${basedir}/docs/api"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="Hadoop CCV API">
+    <doctitle><![CDATA[<h1>Hadoop CompleteCompositionVectors</h1>]]></doctitle>
+    <bottom><![CDATA[<i>Copyright &#169; 2009 The MITRE Corp. All Rights Reserved.</i>]]></bottom>
+    <!-- for externally (and internally) generated java doc?
+        <link href="http://java.sun.com/javase/6/docs/api/" /> 
+        <link href="http://hadoop.apache.org/core/docs/current/api/" />
+         -->
+    </javadoc>
+  </target>
+
+</project>

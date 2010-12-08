@@ -1,0 +1,11 @@
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
+\contentsline {subsection}{\numberline {1.1}Building Phylogenetic Trees}{2}{subsection.1.1}
+\contentsline {subsubsection}{\numberline {1.1.1}Current Limitation}{2}{subsubsection.1.1.1}
+\contentsline {subsection}{\numberline {1.2}The Neighbor-Joining Algorithm}{2}{subsection.1.2}
+\contentsline {section}{\numberline {2}Methods}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Assessing Performance}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Parallel Implementation}{4}{subsection.2.2}
+\contentsline {section}{\numberline {3}Results}{5}{section.3}
+\contentsline {subsection}{\numberline {3.1}Overall Performance}{5}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Parallel Efficiency/Speedup}{5}{subsection.3.2}
+\contentsline {section}{\numberline {4}Conclusions}{6}{section.4}

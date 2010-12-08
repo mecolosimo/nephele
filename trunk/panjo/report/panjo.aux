@@ -1,0 +1,43 @@
+\relax 
+\ifx\hyper@anchor\@undefined
+\global \let \oldcontentsline\contentsline
+\gdef \contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global \let \oldnewlabel\newlabel
+\gdef \newlabel#1#2{\newlabelxx{#1}#2}
+\gdef \newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\let \contentsline\oldcontentsline
+\let \newlabel\oldnewlabel}
+\else
+\global \let \hyper@last\relax 
+\fi
+
+\bibstyle{plain}
+\citation{saitou1987the}
+\citation{studier_kepler_1988}
+\citation{desantis_greengenes}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Building Phylogenetic Trees}{2}{subsection.1.1}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.1}Current Limitation}{2}{subsubsection.1.1.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}The Neighbor-Joining Algorithm}{2}{subsection.1.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Methods}{2}{section.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Assessing Performance}{2}{subsection.2.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Step 1: The matrix at the beginning of the computation. Each process computes its minimum reweighted value. The processors exchange and a global minimum value (Min) is found.}}{3}{figure.1}}
+\newlabel{fig:mat_1}{{1}{3}{Parallel Implementation\relax }{figure.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Step 2: The row and column corresponding to i are eliminated from future work. The new node U is added and distances to it and every other node are computed. Each processor computes its corresponding piece and then the pieces are sent to the processor which owns column J; This is effectively a row-column transpose operation.}}{4}{figure.2}}
+\newlabel{fig:mat_2}{{2}{4}{Parallel Implementation\relax }{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Parallel Implementation}{4}{subsection.2.2}}
+\bibdata{panjo.bib}
+\bibcite{studier_kepler_1988}{1}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Results}{5}{section.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Overall Performance}{5}{subsection.3.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Performance of both serial implementation both with respect to total time as well as the ratio of time spent in MPI to the total time.}}{5}{figure.3}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Total run time for each matrix size and processor combination}}}{5}{figure.3}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Time spent in MPI routines divided by Total run time.}}}{5}{figure.3}}
+\newlabel{fig:performance}{{3}{5}{Overall Performance\relax }{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Parallel Efficiency/Speedup}{5}{subsection.3.2}}
+\bibcite{saitou1987the}{2}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Speedup and Efficiency plots}}{6}{figure.4}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Speedup}}}{6}{figure.4}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Parallel efficiciency}}}{6}{figure.4}}
+\newlabel{fig:speedup}{{4}{6}{Parallel Efficiency/Speedup\relax }{figure.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Conclusions}{6}{section.4}}
