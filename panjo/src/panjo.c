@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <sys/unistd.h>   // for gethostname
+#include <math.h>    // for INFINITY
 #ifdef __USE_MPI__
 #include "mpi.h"
 #endif
 
 #include "panjo-lib.h"
 
-#define VERBOSE 1
+#define VERBOSE 0
 #define REALLY_VERBOSE 0
 
 #define __BUILD_TREE__ 1
@@ -23,21 +24,23 @@ static const float BIG_NUMBER = INFINITY;
 static const float BIG_NUMBER = __builtin_inf();
 #endif
 
-
 char* input_filename = 0;
 char* output_filename = 0;
+char hostname[128];
+int my_rank = 0;
 
-void tree_print (node_t* node) {
+void tree_print (FILE* out, node_t* node) {
+
     if (node != NULL) {
 	if (node->is_leaf) {
-	    printf("%d", node->seq_index);
+	  fprintf(out,"%d", node->seq_index);
 	}
 	else {
-	    printf("(");
-	    tree_print(node->left);
-	    printf(",");
-	    tree_print(node->right);
-	    printf(")");
+	  fprintf(out,"(");
+	  tree_print(out, node->left);
+	  fprintf(out,",");
+	  tree_print(out, node->right);
+	  fprintf(out,")");
 	}
     }
 }
@@ -71,8 +74,7 @@ double get(proc_attr_t proc, int i, int j) {
 }
 
 int get_dist_matrix_size() {
-    if (VERBOSE) 
-	printf("getting distance matrix size for: %s\n", input_filename);
+  printf("Panjo[%s:rank-%d]: Getting distance matrix size for '%s'\n", hostname, my_rank, input_filename);
 
     char number[30];
     unsigned int asize = 0;
@@ -95,7 +97,7 @@ int get_dist_matrix_size() {
 int read_dist_matrix(proc_attr_t this_proc) 
 {
     if (VERBOSE) 
-	printf("Processor: %d: reading distance matrix: %s\n", this_proc.rank, input_filename);
+      printf("Panjo[%d:rank-%d]: reading distance matrix: %s\n", hostname, this_proc.rank, input_filename);
     
     double d = 0;
     FILE* fp = NULL;
@@ -115,22 +117,9 @@ int read_dist_matrix(proc_attr_t this_proc)
 	return -1;
     }
 
-    /** column major layout in the file. 
+    /** column major layout in the file. */
     for (j = 0; j < this_proc.N; j++) {
 	for (i = 0; i < this_proc.N; i++) {
-	    if (fscanf(fp, "%s", number) == 1) {
-		d = strtod(number, NULL);
-		
-		if(owns(this_proc, i, j)) {
-		    store(this_proc, i, j, d);
-		}
-	    }
-	}
-    }
-    */
-    /** row major layout in the file to column major layout in memory */
-    for (i = 0; i < this_proc.N; i++) {
-	for (j = 0; j < this_proc.N; j++) {
 	    if (fscanf(fp, "%s", number) == 1) {
 		d = strtod(number, NULL);
 		
@@ -156,8 +145,9 @@ int read_dist_matrix(proc_attr_t this_proc)
 
 
 main(int argc, char* argv[]) {
-    int my_rank = 0;
-    unsigned N = 0, K = 0, TS = 0;
+  gethostname(hostname, sizeof hostname);
+  unsigned N = 0, K = 0, TS = 0;
+  FILE* out_fp = NULL;
     int P = 1;
     int i,j;
     double minD, tmpD;
@@ -188,16 +178,32 @@ main(int argc, char* argv[]) {
     get_options(argc, argv);
 
     if (!(input_filename)) {
-	printf("Must specify input filename.\n");
+      printf("Panjo[%s:rank-%d]: Must specify input filename.\n", hostname, my_rank);
+      dump_usage(stdout, argv[0]);
+      /** here we need to signal to the rest of the guys to die! **/
+      exit(1);
+    }
+
+    if (output_filename ) {
+      out_fp = fopen(output_filename, "w");
+      if (out_fp == NULL) {
+	printf("Panjo[%s:rank-%d]: Cannot open output file '%s' for writing.\n", hostname, my_rank, output_filename);
+	/** here we need to signal to the rest of the guys to die! **/
 	exit(1);
+      } else if (my_rank == 0) {
+	printf("Panjo[%s:rank-%d]: Tree will be written to '%s'.\n", hostname, my_rank, output_filename);
+      }
+    } else {
+      printf("Panjo[%s:rank-%d]: Warning using standard output to write tree to!\n", hostname, my_rank);
+      out_fp = stdout;
     }
     
     /** get the total size. **/
     if (my_rank == 0) { 
 	if ((TS = get_dist_matrix_size()) < 0) {
-	    printf("Problem getting size of distance matrix.\n");
-	    exit(1);
-	    /** here we need to signal to the rest of the guys to die! **/
+	  printf("Panjo[%s:rank-%d]: Problem getting size of distance matrix.\n", hostname, my_rank);
+	  /** here we need to signal to the rest of the guys to die! **/
+	  exit(1);
 	}
     }
     
@@ -213,31 +219,46 @@ main(int argc, char* argv[]) {
     K = (int) (N / P);
     
     if (N % P != 0) {
-      
-      printf("Do not support a number of processors which does not divide N (%d).\n", N);
-      exit(1);
-      // mec: this doesn't work
-	/** just give the extra to the first processor. */
+      if (my_rank == 0) {
+      /** find the largest divisor of N working down from the number of processors given. */
+      int ld;
+      printf("trying to find largest divisor for %d starting at %d\n", N, P);
+      for (ld = P; ld >= 1; ld--) {
+	if (N % ld == 0) {
+	  break;
+	}
+      }
+      printf("Panjo[%s:rank-%d]: Matrix size (%d) and number of processors (%d) not evenly divisible! Largest divisor lower than given processors is %d\n", hostname, my_rank, N, P, ld);
+      } else {
+printf("Panjo[%s:rank-%d]: Matrix size (%d) and number of processors (%d) not evenly divisible! Check main (rank 0) for possible largest divisor lower.\n", hostname, my_rank, N, P);
+      }
+ //printf("Panjo does not support %d processors for a matrix of size %d. Please select ve a processor which supports division by N (%d).\n", hostname, N);
+	exit(1);
+	/** 
+	 * Not completed see MPI_Allgather below!!!
+	 * Give the extra to the first processor. 
+	 */
 	if (my_rank == 0) {
+	  printf("Panjo[%s:rank-%d]: Warning matrix size (%d) and number of processors (%d) not evenly divisible.We are getting the remainder (%d) \n", hostname, my_rank, N, P, (N % P));
 	    K += (N % P);
 	}
     }
 
-    this_proc.start = (K*my_rank) + ((my_rank == 0) ? 0 : (N % P));   // adjust for giving the first processor more (which doesn't work!
+    this_proc.start = (K*my_rank) + ((my_rank == 0) ? 0 : (N % P));
     this_proc.end = this_proc.start + K;
     this_proc.rank = my_rank;
     this_proc.matrix = (double*) malloc(sizeof(double)*K*N);
     this_proc.N = N;
 
     if (this_proc.rank == 0) {
-	printf("Beginning Neighbor-Join Algorithm.\n");
+      printf("Panjo[%s:main]: Beginning Neighbor-Join Algorithm.\n", hostname);
 	printf("\t N = %d\n", N);
 	printf("\t P = %d\n", P);
 	printf("\t K = %d\n", K);
     }
     if (VERBOSE) {
-	printf("processor: %d getting width of: %d with start: %d and end: %d\n", my_rank, K,
-	       this_proc.start, this_proc.end);
+      printf("Panjo[%s:rank-%d]:Getting width of: %d with start: %d and end: %d\n",
+	     hostname, my_rank, K,  this_proc.start, this_proc.end);
     }
 
     /** allocate space. **/
@@ -282,7 +303,7 @@ main(int argc, char* argv[]) {
     
     /** read the appropriate piece into your memory. **/
     if (read_dist_matrix(this_proc) < 0) {
-	printf("problem reading distance matrix.");
+      printf("Panjo[%d:rank-%d]:Problem reading distance matrix.", hostname, my_rank);
     }
 
     initialize_timer(&total_timer);
@@ -531,7 +552,9 @@ main(int argc, char* argv[]) {
 	
 	/** print the tree. **/
 	printf("Neighbor-Joining Tree:\n\t");
-	tree_print(root);
+
+
+	tree_print(out_fp, root);
 	printf("\n");
 #endif
     }
