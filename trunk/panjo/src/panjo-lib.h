@@ -61,6 +61,7 @@ extern char* output_filename;
 /* Process the command line options */
 void get_options(int, char **);
 
+void dump_usage(FILE* out, const char *const pathname);
 
 /* A simple wrapper around the clock() timer */
 struct Timer {

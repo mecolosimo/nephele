@@ -11,8 +11,8 @@ struct arginfo* ext_args = 0;
 
 
 struct arginfo core_args[] = {
-    { 'f', STRINGARG, &input_filename, "Row packed distance matrix." },
-    { 'o', STRINGARG, &output_filename, "Filename for fish output."},
+    { 'f', STRINGARG, &input_filename, "The input distance matrix filename in row major order." },
+    { 'o', STRINGARG, &output_filename, "The output filename for the tree."},
     { 0, NULLARG, NULL, NULL },
 };
 
@@ -42,7 +42,7 @@ dump_args (FILE* out, const struct arginfo* arg)
   }
 }
 
-static void
+void
 dump_usage(FILE* out, const char *const pathname)
 {
   const struct arginfo* arg;
