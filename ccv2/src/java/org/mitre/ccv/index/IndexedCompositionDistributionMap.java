@@ -77,7 +77,7 @@ public class IndexedCompositionDistributionMap implements CompositionDistributio
      */
     public void addSequence(String inSequence) {
         for (int i = 0; i < inSequence.length() - this.windowSize + 1; ++i) {
-            String subst = inSequence.substring(i, i + this.windowSize);
+            String subst = new String(inSequence.substring(i, i + this.windowSize)); 
             this.put(subst);
         }
     }

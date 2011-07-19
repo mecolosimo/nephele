@@ -52,7 +52,7 @@
     <!-- Compile the java code from ${src} into ${build} -->
     <mkdir dir="${build}" />
     <!-- DEBUG LEVEL SET HERE -->
-    <javac srcdir="${src}" destdir="${build}" debug="on" debuglevel="lines,vars,source">
+    <javac srcdir="${src}" destdir="${build}" debug="on" debuglevel="lines,vars,source" includeantruntime="false">
       <classpath refid="ccv.core.classpath" /> 
     </javac>
     <!-- see if we have a build number -->
