@@ -1,0 +1,29 @@
+QuickStart Guide for using Nephele
+
+=Introduction =
+
+This guide is for running Nephele on Linux/Unix/OS X systems from the command line (terminal).
+
+=  Running CCV =
+
+After building or downloading a built version check to see if it works
+{{{
+cd dist
+./bin/ccv.sh -help
+}}}
+
+== Running an example (test data) ==
+
+{{{
+./bin/ccv.sh -file ../test/data/HA_HolmesShortSeqs.fasta -xml ../test/HA_HolmesShortSeqs.xml -cluster ../test/HA_HolmesShortSeqs.ap
+}}}
+
+This will use the default window size of 3 to 9 and outputs a PhyloXML tree and the results of the clustering. The tree can be view with [http://treeviewj.sourceforge.net/Site/TreeViewJ.html TreeViewJ].
+
+
+= Hadoop (HCCV) =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
