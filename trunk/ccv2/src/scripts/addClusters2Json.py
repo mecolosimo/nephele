@@ -1,4 +1,4 @@
-# $Id: addClusters2Json.py 986 2008-08-20 17:42:33Z mcolosimo $
+# $Id$
 """
 addClusters2Json
 
@@ -6,7 +6,7 @@ Adds clusters from the CCV clusters file to a json vectors file.
 
 @author: Marc E. Colosimo, created 1 July 2008
 @copyright: The MITRE Corporation, ALL RIGHTS RESERVED, 2008
-@version: $Revision: 986 $
+@version: $Revision$
 """
 
 import cjson

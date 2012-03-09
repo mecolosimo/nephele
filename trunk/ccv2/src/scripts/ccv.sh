@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# $Id: ccv.sh 1381 2010-11-02 15:04:56Z mcolosimo $
+# $Id$
 # Built on @timestamp@ for Version @version@
 
 set -e
