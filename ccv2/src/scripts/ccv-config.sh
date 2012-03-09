@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# $Id: ccv-config.sh 1374 2010-10-29 13:07:26Z mcolosimo $
+# $Id$
 
 # resolve links - $0 may be a softlink
 this="$0"

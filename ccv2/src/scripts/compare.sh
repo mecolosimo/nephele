@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# $Id: compare.sh 1374 2010-10-29 13:07:26Z mcolosimo $
+# $Id$
 # Built on @timestamp@ for Version @version@
 
 set -e
