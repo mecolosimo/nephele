@@ -1,0 +1,54 @@
+QuickStart Guide for using Nephele
+
+# Introduction #
+
+This guide is for running Nephele on Linux/Unix/OS X systems from the command line (terminal).
+
+# Running CCV #
+
+After building or downloading a built version check to see if it works
+```
+cd dist
+./bin/ccv.sh -help
+```
+
+## Running an example (test data) ##
+
+```
+./bin/ccv.sh -file ../test/data/HA_HolmesShortSeqs.fasta -xml ../test/HA_HolmesShortSeqs.xml -cluster ../test/HA_HolmesShortSeqs.ap
+```
+
+This will use the default window size of 3 to 9 and outputs a PhyloXML tree and the results of the clustering. The tree can be view with [TreeViewJ](http://treeviewj.sourceforge.net/Site/TreeViewJ.html).
+
+## Coloring trees ##
+
+For something more interesting to look at use the larger test data
+
+```
+./bin/ccv.sh -file ../test/data/HA_HolmesSeqs.txt.fasta -xml ../test/HA_HolmesSeqs.xml -cluster ../test/HA_HolmesSeqs.ap
+```
+
+The coloring script has several options for colors, but the default probably is your best bet
+
+```
+./bin/colortree.py ../test/HA_HolmesSeqs.xml ../test/HA_HolmesSeqs.ap  > ../text/HA_HolmesSeqsColored.xml
+```
+
+You should see something like this:
+![http://nephele.googlecode.com/svn/trunk/wiki/images/trees/treeviewj-ha_holmes.png](http://nephele.googlecode.com/svn/trunk/wiki/images/trees/treeviewj-ha_holmes.png)
+
+The SimpleOrder output is also not that bad for a few clusters
+
+```
+./bin/colortree.py ../test/HA_HolmesSeqs.xml 2 ../test/HA_HolmesSeqs.ap  > ../text/HA_HolmesSeqsSimpleColored.xml
+```
+
+
+
+
+# Hadoop (HCCV) #
+
+Add your content here.  Format your content with:
+  * Text in **bold** or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
